@@ -7,12 +7,22 @@
 Game::Game() : renderWindow(sf::VideoMode(gameWidth, gameHeight), ""), player(playerIdSkinStart, playerHPStart), file2(highscoresFileName, ','), file3(maxLevelFileName, ',')
 {
 	//Get screen resolution
+	#ifdef __linux__ 
+	Display* d = XOpenDisplay(NULL);
+	Screen*  s = DefaultScreenOfDisplay(d);
+
+	screenWidth = (int)s->width;
+	screenHeight = (int)s->height;
+	#elif _WIN32
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();
 	GetWindowRect(hDesktop, &desktop);
 
-	int screenWidth = (int)desktop.right;
-	int screenHeight = (int)desktop.bottom;
+	screenWidth = (int)desktop.right;
+	screenHeight = (int)desktop.bottom;
+	#else
+
+	#endif
 
 	//renderWindow.create(sf::VideoMode(gameWidth, gameHeight), gameName);//Don't use
 	renderWindow.setTitle(gameName);
@@ -102,8 +112,8 @@ void Game::update()
 			}
 		
 
-		texts["hp"].setString("HP: " + to_string(player.getHP()));
-		texts["points"].setString("Points: " + to_string(player.getPoints()));
+		texts["hp"].setString("HP: " + std::to_string(player.getHP()));
+		texts["points"].setString("Points: " + std::to_string(player.getPoints()));
 		texts["pause"].setString("PAUSE");
 
 		renderWindow.draw(sprites["background"]);
@@ -302,7 +312,7 @@ void Game::update()
 	case 3:
 	{
 		// Highscores
-		string scores = "TOP 5 HIGHSCORES\n\n";
+		std::string scores = "TOP 5 HIGHSCORES\n\n";
 		for (int i = 0; i < sizeof(highscores) / sizeof(highscores[0]); i++)
 			scores += highscores[i][0] + " " + highscores[i][1] + "\n";
 
@@ -397,11 +407,11 @@ void Game::update()
 			}
 		}
 
-		string newPlayerName = texts["char1"].getString() + texts["char2"].getString() + texts["char3"].getString();
+		std::string newPlayerName = texts["char1"].getString() + texts["char2"].getString() + texts["char3"].getString();
 		highscores[smallestHighscoreTabIndex][0] = newPlayerName;
-		highscores[smallestHighscoreTabIndex][1] = to_string(player.getPoints());
+		highscores[smallestHighscoreTabIndex][1] = std::to_string(player.getPoints());
 
-		string sortTemp = "";
+		std::string sortTemp = "";
 		int sortChange = 0;
 		int sortCounter = 0;
 		int i = 0;
@@ -517,7 +527,7 @@ void Game::processEvents()
 		}
 		if (actualView == 9) {
 			if (currentChar[currentCharPosition] > 0) {
-				string temp1 = "char" + to_string(currentCharPosition + 1);
+				std::string temp1 = "char" + std::to_string(currentCharPosition + 1);
 				texts[temp1].setString(characters[currentChar[currentCharPosition]]);
 				renderWindow.draw(texts[temp1]);
 				currentChar[currentCharPosition]--;
@@ -534,7 +544,7 @@ void Game::processEvents()
 		}
 		if (actualView == 9) {
 			if (currentChar[currentCharPosition] < int(characters.size()) - 1) {
-				string temp1 = "char" + to_string(currentCharPosition + 1);
+				std::string temp1 = "char" + std::to_string(currentCharPosition + 1);
 				texts[temp1].setString(characters[currentChar[currentCharPosition]]);
 				renderWindow.draw(texts[temp1]);
 				currentChar[currentCharPosition]++;
@@ -545,11 +555,11 @@ void Game::processEvents()
 
 	if (leftFlag) {
 		if (currentCharPosition > 0) {
-			string temp1 = "char" + to_string(currentCharPosition + 1);
+			std::string temp1 = "char" + std::to_string(currentCharPosition + 1);
 			texts[temp1].setFillColor(sf::Color(94, 201, 134));
 			renderWindow.draw(texts[temp1]);
 			currentCharPosition--;
-			string temp2 = "char" + to_string(currentCharPosition + 1);
+			std::string temp2 = "char" + std::to_string(currentCharPosition + 1);
 			texts[temp2].setFillColor(sf::Color(164, 246, 68));
 			renderWindow.draw(texts[temp2]);
 			leftFlag = false;
@@ -558,11 +568,11 @@ void Game::processEvents()
 
 	if (rightFlag) {
 		if (currentCharPosition < 2) {
-			string temp1 = "char" + to_string(currentCharPosition + 1);
+			std::string temp1 = "char" + std::to_string(currentCharPosition + 1);
 			texts[temp1].setFillColor(sf::Color(94, 201, 134));
 			renderWindow.draw(texts[temp1]);
 			currentCharPosition++;
-			string temp2 = "char" + to_string(currentCharPosition + 1);
+			std::string temp2 = "char" + std::to_string(currentCharPosition + 1);
 			texts[temp2].setFillColor(sf::Color(164, 246, 68));
 			renderWindow.draw(texts[temp2]);
 			rightFlag = false;
@@ -723,7 +733,7 @@ int Game::loadAssets()
 	for (size_t i = 65; i <= 90; i++)
 	{
 		char c = (char)i;
-		string s = "";
+		std::string s = "";
 		s += c;
 		characters.push_back(s);
 	}
@@ -765,10 +775,10 @@ int Game::loadLevel(int level)
 	enemyBullets.clear();
 	gifts.clear();
 	
-	string strLevelLabel = "LEVEL: " + to_string(level);
+	std::string strLevelLabel = "LEVEL: " + std::to_string(level);
 	texts["level"].setString(strLevelLabel);
 
-	string strLevelFile = "Assets/Data/level" + to_string(level) + ".csv";
+	std::string strLevelFile = "Assets/Data/level" + std::to_string(level) + ".csv";
 
 	Files file1(strLevelFile, ',');
 	file1.load();//Load map

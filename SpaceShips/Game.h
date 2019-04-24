@@ -14,9 +14,12 @@ public:
 
 private:
 	//Set name or resolution
-	const string gameName = "SpaceShips";
+
+	const std::string gameName = "SpaceShips";
 	static const int gameWidth = 1280;
 	static const int gameHeight = 720;
+	int screenWidth = 1280;
+	int screenHeight = 720;
 
 	//Declaration of variables
 	static const int gameSpeed = 1000;
@@ -29,18 +32,18 @@ private:
 	int presentState = 0;//cycles
 	int actualView = 0;
 	int actualViewChoice = 1;
-	string topHighScoreBackground = "menu";
+	std::string topHighScoreBackground = "menu";
 
-	const string highscoresFileName = "Assets/Data/highscores.csv";
-	const string maxLevelFileName = "Assets/Data/maxlevel.csv";
+	const std::string highscoresFileName = "Assets/Data/highscores.csv";
+	const std::string maxLevelFileName = "Assets/Data/maxlevel.csv";
 	const int playerIdSkinStart = 0;
 	const int playerHPStart = 100;
 
 	sf::RenderWindow renderWindow;
-	std::map<string, sf::Texture> textures;
-	std::map<string, sf::Sprite> sprites;
-	std::map<string, sf::Font> fonts;
-	std::map<string, sf::Text> texts;
+	std::map<std::string, sf::Texture> textures;
+	std::map<std::string, sf::Sprite> sprites;
+	std::map<std::string, sf::Font> fonts;
+	std::map<std::string, sf::Text> texts;
 
 	Player player;
 	std::vector<Enemy*> enemies;
@@ -51,8 +54,8 @@ private:
 	Files file2;
 	Files file3;
 
-	string highscores[5][2];
-	std::vector<string> characters;
+	std::string highscores[5][2];
+	std::vector<std::string> characters;
 	int currentChar[3] = { 0,0,0 };
 	int currentCharPosition = 0;
 
