@@ -6,23 +6,8 @@
 
 Game::Game() : renderWindow(sf::VideoMode(gameWidth, gameHeight), ""), player(playerIdSkinStart, playerHPStart), file2(highscoresFileName, ','), file3(maxLevelFileName, ',')
 {
-	//Get screen resolution
-	#ifdef __linux__ 
-	Display* d = XOpenDisplay(NULL);
-	Screen*  s = DefaultScreenOfDisplay(d);
-
-	screenWidth = (int)s->width;
-	screenHeight = (int)s->height;
-	#elif _WIN32
-	RECT desktop;
-	const HWND hDesktop = GetDesktopWindow();
-	GetWindowRect(hDesktop, &desktop);
-
-	screenWidth = (int)desktop.right;
-	screenHeight = (int)desktop.bottom;
-	#else
-
-	#endif
+	screenWidth = sf::VideoMode::getDesktopMode().width;
+	screenHeight = sf::VideoMode::getDesktopMode().height;
 
 	//renderWindow.create(sf::VideoMode(gameWidth, gameHeight), gameName);//Don't use
 	renderWindow.setTitle(gameName);
